@@ -1,7 +1,10 @@
+#This tells Spring Boot: “use Render’s $PORT environment variable (10000), otherwise fallback to 8080”
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
+  main:
+    banner-mode: off
   profiles:
     active: dev   # ← This enables @Profile("dev")
   datasource:
