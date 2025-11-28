@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SIRS - Smart Inventory Replenishment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="refresh" content="30">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary">Smart Inventory Replenishment System</h1>
+
+    <div th:if="${lowStock?.size() > 0}" class="alert alert-danger">
+        <h4>LOW STOCK ALERTS!</h4>
+        <span th:each="inv : ${lowStock}">
+            <strong th:text="${inv.product.sku}"></strong>: only <span th:text="${inv.currentStock}"></span> left
+        </span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Inventory Status</h3>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>SKU</th><th>Name</th><th>Stock</th><th>Reorder Point</th><th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="inv : ${inventories}"
+                    th:class="${inv.currentStock <= inv.reorderPoint} ? 'table-danger' : 'table-success'">
+                    <td th:text="${inv.product.sku}"></td>
+                    <td th:text="${inv.product.name}"></td>
+                    <td th:text="${inv.currentStock}"></td>
+                    <td th:text="${inv.reorderPoint}"></td>
+                    <td>
+    <span th:if="${inv.currentStock != null and inv.reorderPoint != null and inv.currentStock <= inv.reorderPoint}"
+          class="fw-bold text-danger">
+        ORDERED
+    </span>
+                        <span th:unless="${inv.currentStock != null and inv.reorderPoint != null and inv.currentStock <= inv.reorderPoint}"
+                              class="text-success">
+        OK
+    </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>Pending POs</h3>
+            <div th:each="po : ${pendingPOs}" class="card mb-2">
+                <div class="card-body">
+                    <strong th:text="${po.product.sku}"></strong> × <span th:text="${po.qty}"></span><br>
+                    ETA: <span th:text="${po.eta}"></span>
+                    <form th:action="@{'/api/po/' + ${po.id} + '/receive'}" method="post" style="display:inline">
+                        <button class="btn btn-success btn-sm mt-1">Receive</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
