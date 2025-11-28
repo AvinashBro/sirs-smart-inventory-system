@@ -293,3 +293,6 @@ mv -- "$TMP_DOWNLOAD_DIR/$actualDistributionDir" "$MAVEN_HOME" || [ -d "$MAVEN_H
 
 clean || :
 exec_maven "$@"
+e x p o r t   J A V A _ H O M E = " / u s r / l i b / j v m / t e m u r i n - 1 7 - j d k - a m d 6 4 "  
+ e x p o r t   P A T H = " $ J A V A _ H O M E / b i n : $ P A T H "  
+ 
