@@ -1,18 +1,14 @@
-# Build stage
-FROM maven:3.9.9-eclipse-temurin-17 AS build
-WORKDIR /app
+# Build stage (Maven with Java 17)
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /home/app
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:go-offline -B  # Cache dependencies for faster builds
 COPY src ./src
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package -DskipTests -B  # Skip tests for speed
 
-# Runtime stage – tiny & perfect for Render
+# Package stage (JRE for runtime)
 FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-# This is the ONLY correct way for Render 2025
-EXPOSE 8080
-ENV JAVA_OPTS="-Dserver.port=8080"
-CMD exec java $JAVA_OPTS -jar app.jar
-# This single line fixes the $PORT error forever
-ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
+WORKDIR /home/app
+COPY --from=build /home/app/target/*.jar app.jar
+EXPOSE $PORT
+ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "app.jar"]
