@@ -1,22 +1,19 @@
-# Stage 1: Build the app with Maven (use robust image with Java 17)
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Use official Maven image with Java 17 to build
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
 WORKDIR /app
-# Set JAVA_HOME explicitly for Render Linux
-ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
-ENV PATH=$JAVA_HOME/bin:$PATH
-# Copy pom.xml first for better caching
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
-# Copy source and build (skip tests for speed)
 COPY src ./src
-RUN mvn clean package -DskipTests -Dmaven.test.skip=true
+RUN mvn clean package -DskipTests -B
 
-# Stage 2: Run the app with lightweight JRE (Temurin 17)
+# Runtime image
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-# Copy JAR from build stage
-COPY --from=build /app/target/*.jar app.jar
-# Render binds to $PORT (10000), expose it
+COPY --from=builder /app/target/*.jar app.jar
+
+# THIS IS THE ONLY LINE THAT MATTERS FOR RENDER
+ENV PORT=8080
 EXPOSE $PORT
-# Run with $PORT env var for Spring Boot
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
+
+# This single line fixes the $PORT error forever
+ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
