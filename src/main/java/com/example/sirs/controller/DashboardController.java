@@ -1,10 +1,11 @@
+// src/main/java/com/example/sirs/controller/DashboardController.java
 package com.example.sirs.controller;
 
 import com.example.sirs.model.Inventory;
 import com.example.sirs.repository.InventoryRepository;
 import com.example.sirs.repository.PurchaseOrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;        // ← MUST BE THIS
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -34,6 +35,6 @@ public class DashboardController {
         model.addAttribute("lowStock", lowStock);
         model.addAttribute("pendingPOs", pendingPOs);
 
-        return "dashboard";   // ← this now loads templates/dashboard.html
+        return "dashboard";
     }
 }

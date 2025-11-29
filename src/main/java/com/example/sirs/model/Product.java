@@ -1,3 +1,4 @@
+// src/main/java/com/example/sirs/model/Product.java
 package com.example.sirs.model;
 
 import jakarta.persistence.*;
@@ -5,11 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "product")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Product {
 
     @Id
@@ -25,12 +22,11 @@ public class Product {
     @Builder.Default
     private Integer leadTimeDays = 7;
 
-    // Safety stock fields
     @Builder.Default
-    private String safetyStockMethod = "percent"; // percent|statistical
+    private String safetyStockMethod = "percent";
 
     @Builder.Default
-    private Double safetyStockValue = 10.0; // percent if method==percent
+    private Double safetyStockValue = 20.0;
 
     @Builder.Default
     private Integer moq = 1;

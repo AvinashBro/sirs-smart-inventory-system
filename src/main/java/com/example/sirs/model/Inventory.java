@@ -1,3 +1,4 @@
+// src/main/java/com/example/sirs/model/Inventory.java
 package com.example.sirs.model;
 
 import jakarta.persistence.*;
@@ -16,18 +17,17 @@ public class Inventory {
     @JoinColumn(name = "product_id", unique = true)
     private Product product;
 
-    @Builder.Default                     // ← ADD THIS
+    @Builder.Default
     private String location = "MAIN";
 
-    @Builder.Default                     // ← ADD THIS
-    @Column(nullable = false)
+    @Builder.Default
     private Integer currentStock = 0;
 
-    @Builder.Default                     // ← ADD THIS
+    @Builder.Default
     private Integer reorderPoint = 0;
 
     private LocalDate lastForecastDate;
 
-    @Builder.Default                     // ← ADD THIS
+    @Builder.Default
     private LocalDateTime lastUpdated = LocalDateTime.now();
 }
