@@ -12,7 +12,13 @@ spring:
     username: root
     password: abc123
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+actuator:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Exposes all actuator endpoints in dev (security: only in dev)
+  mappings:
+    enabled: true
 
 
   jpa:
